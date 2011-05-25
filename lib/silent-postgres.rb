@@ -20,7 +20,11 @@ if Rails.env.development? || Rails.env.test?
 
       eval <<-METHOD
         def #{m1}_with_silencer#{m2}(*args)
-          @logger.silence do
+          if @logger.respond_to?(:silence)
+            @logger.silence do
+              #{m1}_without_silencer#{m2}(*args)
+            end
+          else
             #{m1}_without_silencer#{m2}(*args)
           end
         end
